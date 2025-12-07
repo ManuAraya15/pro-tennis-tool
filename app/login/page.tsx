@@ -1,0 +1,12 @@
+interface LoginProps {
+    
+}
+
+const Login = (props: LoginProps) => {
+    
+    return (
+        <h1>Login</h1>
+    );
+};
+
+export default Login;
