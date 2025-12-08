@@ -36,11 +36,11 @@ export default function ProfileDropdown() {
 
                 }
                 {isOpen &&
-                    <div className="absolute right-0 top-5 sm:top-8 z-10 mt-2 w-32 origin-top-right bg-white p-2 max-h-[400px] snap-y overflow-auto shadow-lg rounded ring-1 ring-black ring-opacity-5">
-                        <Link href="/" className='flex items-center  overflow-hidden text-black w-full hover:text-primary '>
+                    <div className="absolute right-0 top-5 sm:top-8 z-10 mt-2 w-44 origin-top-right bg-white p-2 max-h-[400px] snap-y overflow-auto shadow-lg rounded ring-1 ring-black ring-opacity-5">
+                        <Link href="/" className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
                             <CgProfile /> Mi perfil
                         </Link>
-                        <Link href="/" className='flex items-center  overflow-hidden text-black w-full hover:text-primary '>
+                        <Link href="/" className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
                             <MdLogout /> Cerrar Sesion
                         </Link>
                     </div>

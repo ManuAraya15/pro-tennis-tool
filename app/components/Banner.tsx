@@ -14,9 +14,7 @@ const Banner = (props: BannerProps) => {
                 <div className="absolute left-0 top-0 flex flex-col justify-center h-full p-6 md:gap-3 max-sm:gap-3 text-white">
                     <h2 className="md:text-4xl sm:text-lg text-3xl font-bold">Encuentra tu partido ideal</h2>
                     <p className="md:text-xl sm:text-base text-lg">Unete a nuestra comunidad y mejora tu juego</p>
-                    <button className=" w-max d:text-xl sm:text-base text-lg cursor-pointer bg-on-primary text-primary  hover:text-secondary-container hover:bg-on-secondary-container px-2 py-1 rounded-xl">
-                        Ver partido
-                    </button>
+                    
                 </div>
 
             </div>

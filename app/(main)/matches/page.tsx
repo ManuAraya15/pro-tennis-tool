@@ -1,3 +1,8 @@
+import IncomingMatches from "./components/IncomingMatches";
+import MatchInvitations from "./components/MatchInvitations";
+import NewMatchButtom from "./components/NewMatchButtom";
+import PreviousMatches from "./components/PreviousMatches";
+
 interface MatchesPageProps {
     
 }
@@ -5,7 +10,11 @@ interface MatchesPageProps {
 const MatchesPage = (props: MatchesPageProps) => {
     
     return (
-        <h1>PArtidos</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            <IncomingMatches/>
+            <MatchInvitations/>
+            <PreviousMatches/>
+        </div>
     );
 };
 

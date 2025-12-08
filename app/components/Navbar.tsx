@@ -28,7 +28,7 @@ const Navbar = (props: NavbarProps) => {
                     <h3 className="text-sm md:text-xl font-bold">Pro Tennis Tool</h3>
                 </Link>
                 {isAuth ?
-                    <ul className="hidden md:flex items-center gap-3">
+                    <ul className="hidden md:flex items-center gap-5">
                         <li >
                             <Link className="flex gap-2 items-center" href="/">
                                 Mis partidos
