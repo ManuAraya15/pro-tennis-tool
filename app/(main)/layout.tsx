@@ -11,7 +11,7 @@ const LayoutRoot = ({children}: LayoutRootProps) => {
     return (
         <>
             <Navbar/>
-            <main>
+            <main className="min-h-[70vh]">
                 {children}
             </main>
             <Footer/>
