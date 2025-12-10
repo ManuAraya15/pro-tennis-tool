@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output   = "/app/generated/prisma-client"
+  output   = "../generated/prisma"
 }
 
 model User {
@@ -30,6 +30,7 @@ model Match {
   createdAt DateTime @default(now())
   title     String   @unique
   location  String
+  result    String?
   date      DateTime
   admin   User @relation(fields: [adminId], references: [id])
   adminId Int

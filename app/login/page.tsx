@@ -1,12 +1,12 @@
 "use client"
 
-import React from 'react';
+import { login } from "@/actions/auth";
+import { useActionState } from "react";
+
 
 const LoginPage = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log('Formulario enviado');
-  };
+
+    const [state, formAction] = useActionState(login, null);
 
   return (
     <div className="flex items-center justify-center min-h-screen px-3">
@@ -15,12 +15,20 @@ const LoginPage = () => {
         <h2 className="text-3xl font-bold text-center text-primary">
           Iniciar Sesión
         </h2>
-        
-        <form className="space-y-6" onSubmit={handleSubmit}>
+
+        {state?.success == false && state?.message &&
+          <div className='fixed left-0 bottom-0 w-full p-5'>
+            <div className='bg-error-container border border-error text-error rounded-lg p-3 w-max mx-auto'>
+              {state?.message} 
+            </div>
+          </div>        
+        }
+
+        <form action={formAction} className="space-y-6">
           {/* Campo de Correo Electrónico */}
           <div>
-            <label 
-              htmlFor="email" 
+            <label
+              htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
               Correo Electrónico
@@ -40,8 +48,8 @@ const LoginPage = () => {
 
           {/* Campo de Contraseña */}
           <div>
-            <label 
-              htmlFor="password" 
+            <label
+              htmlFor="password"
               className="block text-sm font-medium text-gray-700"
             >
               Contraseña
@@ -72,11 +80,11 @@ const LoginPage = () => {
 
         {/* Enlace o texto adicional */}
         <div className="text-sm text-center">
-          <a 
-            href="#" 
+          <a
+            href="/register"
             className="font-medium text-primary hover:text-primary"
           >
-            ¿Olvidaste tu contraseña?
+            ¿No tienes cuenta? Registrate
           </a>
         </div>
       </div>

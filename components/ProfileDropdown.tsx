@@ -1,3 +1,4 @@
+import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
@@ -37,12 +38,12 @@ export default function ProfileDropdown() {
                 }
                 {isOpen &&
                     <div className="absolute right-0 top-5 sm:top-8 z-10 mt-2 w-44 origin-top-right bg-white p-2 max-h-[400px] snap-y overflow-auto shadow-lg rounded ring-1 ring-black ring-opacity-5">
-                        <Link href="/" className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
+                        <Link href="/profile" className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
                             <CgProfile /> Mi perfil
                         </Link>
-                        <Link href="/" className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
+                        <button onClick={() => signOut()} className='flex gap-2 items-center  overflow-hidden text-black w-full hover:text-primary '>
                             <MdLogout /> Cerrar Sesion
-                        </Link>
+                        </button>
                     </div>
                 }
             </div>

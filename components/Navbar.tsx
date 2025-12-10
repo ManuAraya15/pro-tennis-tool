@@ -10,6 +10,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
 import ProfileDropdown from "./ProfileDropdown";
+import { signOut, useSession } from "next-auth/react";
 
 interface NavbarProps {
 
@@ -18,7 +19,7 @@ interface NavbarProps {
 const Navbar = (props: NavbarProps) => {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isAuth, setIsAuth] = useState(true);
+    const { data: session, status } = useSession();
 
     return (
         <div className="md:container mx-auto md:p-6">
@@ -27,28 +28,28 @@ const Navbar = (props: NavbarProps) => {
                     <BiSolidTennisBall className="text-[#d7ed50] text-base md:text-2xl" />
                     <h3 className="text-sm md:text-xl font-bold">Pro Tennis Tool</h3>
                 </Link>
-                {isAuth ?
+                {status === "authenticated" ?
                     <ul className="hidden md:flex items-center gap-5">
                         <li >
-                            <Link className="flex gap-2 items-center" href="/">
+                            <Link className="flex gap-2 items-center" href="/matches">
                                 Mis partidos
                             </Link>
                         </li>
                         <li>
-                            <ProfileDropdown/>
+                            <ProfileDropdown />
                         </li>
                     </ul>
                     :
                     <ul className="hidden md:flex gap-2">
                         <li >
-                            <button className=" cursor-pointer hover:bg-on-primary hover:text-primary  bg-secondary-container text-on-secondary-container px-2 py-1 rounded-xl">
+                            <Link href={"/login"} className=" cursor-pointer hover:bg-on-primary hover:text-primary  bg-secondary-container text-on-secondary-container px-2 py-1 rounded-xl">
                                 Iniciar Sesion
-                            </button>
+                            </Link>
                         </li>
                         <li>
-                            <button className="cursor-pointer hover:bg-secondary-container hover:text-on-secondary-container bg-on-primary text-primary px-2 py-1 rounded-3xl">
+                            <Link href={"/register"} className="cursor-pointer hover:bg-secondary-container hover:text-on-secondary-container bg-on-primary text-primary px-2 py-1 rounded-3xl">
                                 Registro
-                            </button>
+                            </Link>
                         </li>
                     </ul>
                 }
@@ -71,19 +72,32 @@ const Navbar = (props: NavbarProps) => {
                     {/* Enlaces del Drawer */}
                     <nav className="flex flex-col space-y-2">
                         <Link className="flex gap-2 items-center" href="/">
-                            <CgProfile /> Mi perfil
-                        </Link>
-                        <div className="h-3"></div>
-                        <Link className="flex gap-2 items-center" href="/">
                             <AiOutlineHome /> Inicio
                         </Link>
-                        <Link className="flex gap-2 items-center" href="/">
-                            <FaRegCalendarAlt /> Mis partidos
-                        </Link>
                         <div className="h-3"></div>
-                        <Link className="flex gap-2 items-center" href="/">
-                            <MdLogout /> Cerrar Sesion
-                        </Link>
+                        {status === "authenticated" ?
+                            <>
+
+                                <Link className="flex gap-2 items-center" href="/profile">
+                                    <CgProfile /> Mi perfil
+                                </Link>
+                                <Link className="flex gap-2 items-center" href="/matches">
+                                    <FaRegCalendarAlt /> Mis partidos
+                                </Link>
+                                <div className="h-3"></div>
+                                <button onClick={() => signOut()} className="flex gap-2 items-center">
+                                    <MdLogout /> Cerrar Sesion
+                                </button>
+                            </> :
+                            <>
+                                <Link href={"/login"} className=" cursor-pointer hover:bg-on-primary hover:text-primary  bg-secondary-container text-on-secondary-container px-2 py-1 rounded-xl">
+                                    Iniciar Sesion
+                                </Link>
+                                <Link href={"/register"} className="cursor-pointer hover:bg-secondary-container hover:text-on-secondary-container bg-on-primary text-primary px-2 py-1 rounded-3xl">
+                                    Registro
+                                </Link>
+                            </>
+                        }
                     </nav>
                 </div>
 

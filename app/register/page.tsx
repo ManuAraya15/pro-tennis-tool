@@ -1,22 +1,28 @@
 "use client"
 
-import React from 'react';
+import { signup } from '@/actions/auth';
+import { useActionState } from 'react';
 
 const SignUpPage = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-  };
+
+const [state, formAction] = useActionState(signup, null);
 
   return (
     <div className="flex items-center justify-center min-h-screen px-3">
-      {/* Contenedor del formulario centrado */}
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
         <h2 className="text-3xl font-bold text-center text-primary">
           Crear una cuenta
         </h2>
+
+        {state?.success == false && state?.message &&
+          <div className='fixed left-0 bottom-0 w-full p-5'>
+            <div className='bg-error-container border border-error text-error rounded-lg p-3 w-max mx-auto'>
+              {state?.message} 
+            </div>
+          </div>        
+        }
         
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form action={formAction} className="space-y-6">
           {/* Campo de Correo Electrónico */}
           <div>
             <label 

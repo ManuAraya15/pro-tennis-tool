@@ -1,0 +1,38 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  email        String   @unique
+  name         String?
+  password     String
+  age          Int?
+  objectives   String?
+  avilability  String?
+  sex          String?
+  matches      Match[]
+  adminMatches Match[]  @relation("MatchPlayers")
+  favorites    User[]   @relation("UserFavorites")
+  favoritedBy  User[]   @relation("UserFavorites")
+  invitations  Match[]  @relation("Invitations")
+}
+
+model Match {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  title        String   @unique
+  location     String
+  result       String?
+  date         DateTime
+  admin        User     @relation(fields: [adminId], references: [id])
+  adminId      Int
+  players      User[]   @relation("MatchPlayers")
+  usersInvited User[]   @relation("Invitations")
+}

@@ -1,56 +1,31 @@
+import { getMatchInvitations } from "@/actions/matches";
 import { FaUserCircle } from "react-icons/fa";
+import InvitationCard from "./InvitationCard";
 
 interface MatchInvitationsProps {
 
 }
 
-const MatchInvitations = (props: MatchInvitationsProps) => {
+const MatchInvitations = async (props: MatchInvitationsProps) => {
+
+
+    const response = await getMatchInvitations()
+
+    const { message, success, data: matches } = response
 
     return (
         <div className="bg-geen-500 flex flex-col gap-4">
             <h2 className="text-lg px-2">Invitaciones</h2>
-            <div className="rounded-2xl shadow bg-surface-container flex gap-4 justify-between items-center p-4">
-                <div className="flex items-center gap-4">
-                    <FaUserCircle className="text-7xl" />
-                    <div className="text-sm">
-                        <p className="font-bold line-clamp-1">Andres Rodriguez / Singles</p>
-                        <p className="line-clamp-1">Fecha: 20/06/2024 15:00</p>
-                        <p className="line-clamp-2">Ubicacion: Club de tenis La Plata</p>
-                    </div>
-                </div>
-                <div className="flex max-sm:flex-col gap-2 text-xs">
-                    <button className="bg-tertiary text-on-tertiary p-2 rounded">Aceptar</button>
-                    <button className="bg-error text-on-error p-2 rounded">Rechazar</button>
-                </div>
-            </div>
-            <div className="rounded-2xl shadow bg-surface-container flex gap-4 justify-between items-center p-4">
-                <div className="flex items-center gap-4">
-                    <FaUserCircle className="text-7xl" />
-                    <div className="text-sm">
-                        <p className="font-bold line-clamp-1">Andres Rodriguez / Singles</p>
-                        <p className="line-clamp-1">Fecha: 20/06/2024 15:00</p>
-                        <p className="line-clamp-2">Ubicacion: Club de tenis La Plata</p>
-                    </div>
-                </div>
-                <div className="flex max-sm:flex-col gap-2 text-xs">
-                    <button className="bg-tertiary text-on-tertiary p-2 rounded">Aceptar</button>
-                    <button className="bg-error text-on-error p-2 rounded">Rechazar</button>
-                </div>
-            </div>
-            <div className="rounded-2xl shadow bg-surface-container flex gap-4 justify-between items-center p-4">
-                <div className="flex items-center gap-4">
-                    <FaUserCircle className="text-7xl" />
-                    <div className="text-sm">
-                        <p className="font-bold line-clamp-1">Andres Rodriguez / Singles</p>
-                        <p className="line-clamp-1">Fecha: 20/06/2024 15:00</p>
-                        <p className="line-clamp-2">Ubicacion: Club de tenis La Plata</p>
-                    </div>
-                </div>
-                <div className="flex max-sm:flex-col gap-2 text-xs">
-                    <button className="bg-tertiary text-on-tertiary p-2 rounded">Aceptar</button>
-                    <button className="bg-error text-on-error p-2 rounded">Rechazar</button>
-                </div>
-            </div>
+
+            {matches && matches.length > 0 ?
+                matches.map((match) => {
+                    const { title, adminId, date, createdAt, id, location } = match
+                    return <InvitationCard key={id} match={match}/>
+                }
+                ) :
+                <p className="text-center text-sm text-gray-500">No se han encontrado invitaciones</p>
+
+            }
         </div>
     );
 };
