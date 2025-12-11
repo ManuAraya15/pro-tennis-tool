@@ -1,6 +1,7 @@
 "use client"
 
 import { addMatch } from "@/actions/matches";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
 interface NewMatchFormModalProps {
@@ -8,27 +9,44 @@ interface NewMatchFormModalProps {
     setIsOpen: (isOpen: boolean) => void
 }
 
-const NewMatchFormModal = ({isOpen, setIsOpen}: NewMatchFormModalProps) => {
+const NewMatchFormModal = ({ isOpen, setIsOpen }: NewMatchFormModalProps) => {
     const [state, formAction] = useActionState(addMatch, null);
+    const router = useRouter()
 
     useEffect(() => {
         if (state && state.success) {
-            setIsOpen(false);
+            router.refresh()
         }
     }, [state, setIsOpen]);
 
     return (
-        <div 
-            onClick={() => setIsOpen(false)} 
+        <div
+            onClick={() => setIsOpen(false)}
             className={(isOpen ? " fixed " : " hidden ") + " top-0 left-0 w-screen h-screen bg-[#00000078] flex justify-center items-center z-50"}
         >
-            <div 
-                onClick={(e) => e.stopPropagation()} 
+            <div
+                onClick={(e) => e.stopPropagation()}
                 className="bg-surface-container p-6 rounded-2xl max-w-lg w-full"
             >
                 <form action={formAction} className="space-y-4">
                     <h2 className="text-xl font-bold mb-4">Crear un partido</h2>
-                    
+
+                    {state?.success == false && state?.message &&
+                        <div className='fixed left-0 bottom-0 w-full p-5'>
+                            <div className='bg-error-container border border-error text-error rounded-lg p-3 w-max mx-auto'>
+                                {state?.message}
+                            </div>
+                        </div>
+                    }
+                    {state?.success && state?.message &&
+                        <div className='fixed left-0 bottom-0 w-full p-5'>
+                            <div className='bg-green-200 border border-green-600 text-green-600 rounded-lg p-3 w-max mx-auto'>
+                                {state?.message}
+                            </div>
+                        </div>
+                    }
+
+
                     <div>
                         <label htmlFor="title" className="block text-sm font-medium text-gray-700">Título</label>
                         <input
@@ -40,7 +58,7 @@ const NewMatchFormModal = ({isOpen, setIsOpen}: NewMatchFormModalProps) => {
                             placeholder="Ej: Partido de fútbol en el parque"
                         />
                     </div>
-                    
+
                     <div>
                         <label htmlFor="date" className="block text-sm font-medium text-gray-700">Fecha y Hora</label>
                         <input
@@ -63,12 +81,8 @@ const NewMatchFormModal = ({isOpen, setIsOpen}: NewMatchFormModalProps) => {
                             placeholder="Ej: Cancha Principal, Parque Central"
                         />
                     </div>
-                    
-                    {state && !state.success && (
-                        <p className="text-red-500 text-sm">{state.message}</p>
-                    )}
 
-                    <button 
+                    <button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >

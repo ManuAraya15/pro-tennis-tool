@@ -1,7 +1,7 @@
 "use client"
 
 import { invitePlayer, OptionUsers } from "@/actions/matches";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState, useMemo, useActionState, useEffect } from "react";
 
 interface InvitePlayerFormModalProps {
@@ -12,17 +12,18 @@ interface InvitePlayerFormModalProps {
 
 const InvitePlayerFormModal = ({ isOpen, setIsOpen, options }: InvitePlayerFormModalProps) => {
     const [state, formAction] = useActionState(invitePlayer, null);
-    const { id: matchId } = useParams() 
+    const router = useRouter()
+    const { id: matchId } = useParams()
 
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedItem, setSelectedItem] = useState<OptionUsers | null>(null);
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 
-    // useEffect(() => {
-    //     if (state && state.success) {
-    //         setIsOpen(false);
-    //     }
-    // }, [state, setIsOpen]);
+    useEffect(() => {
+        if (state && state.success) {
+            router.refresh()
+        }
+    }, [state, setIsOpen]);
 
     const filteredOptions = useMemo(() => {
         if (!searchTerm) return options;
@@ -34,14 +35,14 @@ const InvitePlayerFormModal = ({ isOpen, setIsOpen, options }: InvitePlayerFormM
 
     const handleInputChange = (event: any) => {
         setSearchTerm(event.target.value);
-        setIsOptionsOpen(true); 
-        setSelectedItem(null); 
+        setIsOptionsOpen(true);
+        setSelectedItem(null);
     };
 
     const handleSelectItem = (item: OptionUsers) => {
         setSelectedItem(item);
-        setSearchTerm(item.email); 
-        setIsOptionsOpen(false); 
+        setSearchTerm(item.email);
+        setIsOptionsOpen(false);
     };
 
     const handleInputFocus = () => {
@@ -70,6 +71,22 @@ const InvitePlayerFormModal = ({ isOpen, setIsOpen, options }: InvitePlayerFormM
             >
                 <form action={formAction} className="space-y-4">
                     <h2 className="text-xl font-bold mb-4">Invitar Amigo</h2>
+
+                    {state?.success == false && state?.message &&
+                        <div className='fixed left-0 bottom-0 w-full p-5'>
+                            <div className='bg-error-container border border-error text-error rounded-lg p-3 w-max mx-auto'>
+                                {state?.message}
+                            </div>
+                        </div>
+                    }
+                    {state?.success && state?.message &&
+                        <div className='fixed left-0 bottom-0 w-full p-5'>
+                            <div className='bg-green-200 border border-green-600 text-green-600 rounded-lg p-3 w-max mx-auto'>
+                                {state?.message}
+                            </div>
+                        </div>
+                    }
+
                     <input type="hidden" name="matchId" value={matchId} />
                     {selectedItem && selectedItem.id &&
                         <input type="hidden" name="playerId" value={selectedItem.id} />
@@ -113,13 +130,6 @@ const InvitePlayerFormModal = ({ isOpen, setIsOpen, options }: InvitePlayerFormM
                             </div>
                         )}
                     </div>
-                    {state && !state.success && (
-                        <p className="text-red-500 text-sm">{state.message}</p>
-                    )}
-                    {state && state.success && (
-                        <p className="text-green-500 text-sm">{state.message}</p>
-                    )}
-
                     <button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

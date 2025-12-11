@@ -210,23 +210,35 @@ export async function getLastResults(): Promise<ActionResponse<Array<Match>>> {
 }
 
 export type MatchDetailInterface = Match & {
-    players: User[],
     admin: User,
-    usersInvited: User[]
+    players: User & {
+        favoritesBy: User[]
+    }[],
+    usersInvited: User & {
+        favoritesBy: User[]
+    }[]
 }
 
-export async function getMatch(id: string): Promise<ActionResponse<MatchDetailInterface>> {
+export async function getMatch(id: string) {
     try {
 
-        const match: MatchDetailInterface | null = await prisma.match.findFirst(
+        const match = await prisma.match.findFirst(
             {
                 where: {
                     id: parseInt(id)
                 },
                 include: {
-                    players: true,
                     admin: true,
-                    usersInvited: true
+                    players: {
+                        include: {
+                            favoritedBy: true
+                        }
+                    },
+                    usersInvited: {
+                        include: {
+                            favoritedBy: true
+                        }
+                    },
                 }
             }
         )
@@ -408,6 +420,140 @@ export async function declineInvitation(matchId: number): Promise<ActionResponse
 
         return {
             message: "Invitacion rechazada",
+            success: true,
+            data: match
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: error + "",
+            success: false
+        }
+    }
+}
+
+export async function updateMatch(prevState: any, formData: FormData): Promise<ActionResponse<Match>> {
+
+    try {
+
+        const matchId: string | null = formData.get('matchId') as string | null
+        const title: string | null = formData.get('title') as string | null
+        const dateString: string | null = formData.get('date') as string | null
+        const result: string | null = formData.get('result') as string | null
+        const location: string | null = formData.get('location') as string | null
+
+        console.log(matchId)
+        console.log(title)
+        console.log(dateString)
+        console.log(result)
+        console.log(location)
+
+        if (!matchId) return {
+            message: "Hubo un problema al obtener el id del partido",
+            success: false
+        }
+
+        const match: Match | null = await prisma.match.update(
+            {
+                where: {
+                    id: parseInt(matchId)
+                },
+                data: {
+                    title: title ? title : undefined,
+                    date: dateString ? new Date(dateString) : undefined,
+                    location: location ? location : undefined,
+                    result: result ? result : undefined,
+                }
+            }
+        )
+        console.log(match)
+
+        if (!match) return {
+            success: false,
+            message: "Partido no encontrado"
+        }
+
+        return {
+            message: "Partido actualizado",
+            success: true,
+            data: match
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: error + "",
+            success: false
+        }
+    }
+}
+
+export async function deletePlayerFromMatch(matchId: number, playerId: number): Promise<ActionResponse<Match>> {
+
+    try {
+        const match: Match | null = await prisma.match.update(
+            {
+                where: {
+                    id: matchId
+                },
+                data: {
+                    players: {
+                        disconnect: {
+                            id: playerId
+                        }
+                    }
+                }
+            }
+        )
+        console.log(match)
+
+        if (!match) return {
+            success: false,
+            message: "No se pudo encontrar el partido"
+        }
+
+        return {
+            message: "Jugador removido del partido",
+            success: true,
+            data: match
+        }
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: error + "",
+            success: false
+        }
+    }
+}
+
+export async function deleteinvitationFromMatch(matchId: number, playerId: number): Promise<ActionResponse<Match>> {
+
+    try {
+        const match: Match | null = await prisma.match.update(
+            {
+                where: {
+                    id: matchId
+                },
+                data: {
+                    usersInvited: {
+                        disconnect: {
+                            id: playerId
+                        }
+                    }
+                }
+            }
+        )
+        console.log(match)
+
+        if (!match) return {
+            success: false,
+            message: "No se pudo encontrar el partido"
+        }
+
+        return {
+            message: "invitacion eliminada",
             success: true,
             data: match
         }

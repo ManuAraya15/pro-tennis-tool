@@ -1,6 +1,5 @@
 import IncomingMatches from "./components/IncomingMatches";
 import MatchInvitations from "./components/MatchInvitations";
-import NewMatchButtom from "./components/NewMatchButtom";
 import PreviousMatches from "./components/PreviousMatches";
 
 interface MatchesPageProps {
